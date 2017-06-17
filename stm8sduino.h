@@ -1,5 +1,7 @@
 //Arduino port for STM8S family
 //software environment: IAR EMSTM8 + STM8S.h from ST Standard Peripheral Library
+//versin v0.15a 6/16/2017
+//added support for COSMIC and RAISONANCE compilers, in addition to IAR
 //
 //version v0.15 6/9/2017
 //rewrote to enhance portability
@@ -99,7 +101,7 @@ typedef enum {
 #if defined(GPIOI)
 	PI0, PI1, PI2, PI3, PI4, PI5, PI6, PI7, //PI8, PI9, PI10, PI11, PI12, PI13, PI14, PI15,			//GPIOI pin defs
 #endif
-	PINMAX,																							//max pin. for error checking
+	PINMAX																							//max pin. for error checking
 } PIN_TypeDef;
 
 //analog input enum for analogRead() - not all channells are present on all chips/packages
@@ -107,7 +109,7 @@ typedef enum {
 	A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15,
 	//AVREFINT,								//A16=Vrefint. nominal 1.20v
 	//ATEMP,								//A17=temperature sensor
-	AINMAX,									//for error checking
+	AINMAX									//for error checking
 } AIN_TypeDef;
 
 //port/gpio oriented macros
@@ -411,4 +413,7 @@ uint8_t serial2Available(void);
 #define FLASH_EOP_vector                     0x1A
 #define FLASH_WR_PG_DIS_vector               0x1A
 
+#ifdef _COSMIC_
+  #define inline														 //no inline for cosmic
+#endif
 #endif

@@ -23,37 +23,37 @@ static void (*_isrptr_extid) (void)=empty_handler;					//tim isr handler ptr
 static void (*_isrptr_extie) (void)=empty_handler;					//tim isr handler ptr
 
 //exti handlers
-#pragma vector = EXTI0_vector					//exti 0 interrupt
-__interrupt void extia_isr(void) {
-//INTERRUPT_HANDLER(extia_isr, EXTI0_vector) {
+//#pragma vector = EXTI0_vector					//exti 0 interrupt
+//__interrupt void extia_isr(void) {
+INTERRUPT_HANDLER(extia_isr, EXTI0_vector) {
 	//clear the flag
 	_isrptr_extia();							//execute the isr handler
 }
 
-#pragma vector = EXTI1_vector					//exti 0 interrupt
-__interrupt void extib_isr(void) {
-//INTERRUPT_HANDLER(extib_isr, EXTI1_vector) {
+//#pragma vector = EXTI1_vector					//exti 0 interrupt
+//__interrupt void extib_isr(void) {
+INTERRUPT_HANDLER(extib_isr, EXTI1_vector) {
 	//clear the flag
 	_isrptr_extib();							//execute the isr handler
 }
 
-#pragma vector = EXTI2_vector					//exti 0 interrupt
-__interrupt void extic_isr(void) {
-//INTERRUPT_HANDLER(extic_isr, EXTI2_vector) {
+//#pragma vector = EXTI2_vector					//exti 0 interrupt
+//__interrupt void extic_isr(void) {
+INTERRUPT_HANDLER(extic_isr, EXTI2_vector) {
 	//clear the flag
 	_isrptr_extic();							//execute the isr handler
 }
 
-#pragma vector = EXTI3_vector					//exti 0 interrupt
-__interrupt void extid_isr(void) {
-//INTERRUPT_HANDLER(extid_isr, EXTI3_vector) {
+//#pragma vector = EXTI3_vector					//exti 0 interrupt
+//__interrupt void extid_isr(void) {
+INTERRUPT_HANDLER(extid_isr, EXTI3_vector) {
 	//clear the flag
 	_isrptr_extid();							//execute the isr handler
 }
 
-#pragma vector = EXTI4_vector					//exti 0 interrupt
-__interrupt void extie_isr(void) {
-//INTERRUPT_HANDLER(extie_isr, EXTI4_vector) {
+//#pragma vector = EXTI4_vector					//exti 0 interrupt
+//__interrupt void extie_isr(void) {
+INTERRUPT_HANDLER(extie_isr, EXTI4_vector) {
 	//clear the flag
 	_isrptr_extie();							//execute the isr handler
 }
@@ -68,8 +68,9 @@ volatile uint32_t SystemCoreClock=16000000ul/8;				//systemcoreclock. defaults t
 
 //TIM4 overflow isr
 //tim4 isr handler
-#pragma vector = TIM4_OVR_UIF_vector		//tim4 overflow interrupt
-__interrupt void tim4_ovr_isr(void) {
+//#pragma vector = TIM4_OVR_UIF_vector		//tim4 overflow interrupt
+//__interrupt void tim4_ovr_isr(void) {
+INTERRUPT_HANDLER(tim4_ovr_isr, TIM4_OVR_UIF_vector) {
 	TIM4->SR1 &=~(1<<0);					//TIM4_SR_UIF=0;							//clear the flag
 	timer_ticks+=0x100ul;					//increase timer_ticks = 8-bit timer/counter + 1:1 prescaler
 }
@@ -669,6 +670,7 @@ uint8_t serial1Available(void) {
 //configure uart2 -> similar configurations among UART1/2/3/4
 //UART2: TX on PD5, RX on PD6
 void serial2Begin(uint32_t BaudRate) {
+	uint16_t tmp;
 	//route clock to uart2
 	CLK->PCKENR1 |= CLK_PCKENR1_UART2;		//'1'=clock enabled, '0'=clock disabled
 
@@ -679,7 +681,7 @@ void serial2Begin(uint32_t BaudRate) {
 	//configure UART2 TX: 8-bit, 1-stop bit, no parity, syncmode disable
 	UART2->CR1 |= (1<<5);					//'1'->disable uart, '0'->enable uart transmitter
 
-	uint16_t tmp = SystemCoreClock / BaudRate;			//max of 16-bit
+	/*uint16_t */tmp = SystemCoreClock / BaudRate;			//max of 16-bit
 	//set BRR2 first, per the datasheet
 	UART2->BRR2 = ((tmp >> 8) & 0xf0) | (tmp & 0x0f);	//BRR2 is the top 4 + bottom 4 digits
 	UART2->BRR1 = tmp >> 4;								//BRR1 is the middle 4 digits
